@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -47,6 +48,8 @@ dependencies {
 
     // 덱스터 권한 요청
     implementation("com.karumi:dexter:6.2.3")
+
+    // Retrofit: 타입 세이프 HTTP 클라이언트
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")

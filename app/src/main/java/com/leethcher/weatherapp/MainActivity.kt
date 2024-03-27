@@ -85,6 +85,7 @@ class MainActivity : AppCompatActivity() {
         mFusedLocationClient.getCurrentLocation(Priority.PRIORITY_BALANCED_POWER_ACCURACY, null)
             .addOnSuccessListener { loc ->
                 nowLatLng = LatLng(loc.latitude, loc.longitude)
+                getLocationWeatherDetials()
             }
     }
 
@@ -94,6 +95,22 @@ class MainActivity : AppCompatActivity() {
             getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+    }
+
+    private fun getLocationWeatherDetials(){
+        if(Constants.isNetworkAvailable(this)){
+            Toast.makeText(
+                this,
+                "You have connected to the internet.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }else{
+            Toast.makeText(
+                this@MainActivity,
+                "No internet connection available.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
     private fun showRationalDialogForPermission(){
