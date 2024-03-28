@@ -50,6 +50,8 @@ dependencies {
     implementation("com.karumi:dexter:6.2.3")
 
     // Retrofit: 타입 세이프 HTTP 클라이언트
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0") // Gson 컨버터
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
