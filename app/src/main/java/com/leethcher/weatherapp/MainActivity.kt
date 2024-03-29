@@ -2,8 +2,10 @@ package com.leethcher.weatherapp
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.location.LocationManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -38,6 +40,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private var nowLatLng: LatLng? = null
+
+    private var customProgressDialog: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,16 +119,20 @@ class MainActivity : AppCompatActivity() {
 
             val service: WeatherService = retrofit.create<WeatherService>(WeatherService::class.java)
 
+
             // 데이터 요청
             val listCall: Call<WeatherResponse> = service.getWeather(
                 latitude, longitude, Constants.METRIC_UNIT, Constants.APP_ID
             )
+
+            showProgressDialg()
 
             listCall.enqueue(object : Callback<WeatherResponse>{
                 override fun onResponse(
                     call: Call<WeatherResponse>,
                     response: Response<WeatherResponse>
                 ) {
+                    cancelProgressDialg()
                     if(response.isSuccessful){
                         val weatherList: WeatherResponse = response.body()!!
                         Log.i("Response Result", "$weatherList")
@@ -145,6 +153,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
+                    cancelProgressDialg()
                     Log.e("Error", t.message.toString())
                 }
             })
@@ -175,5 +184,20 @@ class MainActivity : AppCompatActivity() {
             .setNegativeButton("Cancel"){ dialog, _ ->
                 dialog.dismiss()
             }
+    }
+
+    private fun showProgressDialg(){
+        customProgressDialog = Dialog(this@MainActivity)
+        customProgressDialog?.setContentView(R.layout.activity_custom_progress_dialog)
+        customProgressDialog?.setCanceledOnTouchOutside(false)
+        customProgressDialog?.window?.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
+        customProgressDialog?.show()
+    }
+
+    private fun cancelProgressDialg(){
+        if(customProgressDialog != null){
+            customProgressDialog?.dismiss()
+            customProgressDialog = null
+        }
     }
 }
