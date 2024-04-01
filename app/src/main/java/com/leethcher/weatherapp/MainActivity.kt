@@ -136,6 +136,8 @@ class MainActivity : AppCompatActivity() {
                     if(response.isSuccessful){
                         val weatherList: WeatherResponse = response.body()!!
                         Log.i("Response Result", "$weatherList")
+
+                        setupUI(weatherList)
                     }else{
                         val rc = response.code()
                         when(rc){
@@ -199,5 +201,23 @@ class MainActivity : AppCompatActivity() {
             customProgressDialog?.dismiss()
             customProgressDialog = null
         }
+    }
+
+    private fun setupUI(weatherList: WeatherResponse){
+        for(i in weatherList.weather.indices){
+            Log.i("Weather Name", weatherList.weather.toString())
+            binding.tvMain.text = weatherList.weather[i].main
+            binding.tvMainDescription.text = weatherList.weather[i].description
+
+            binding.tvTemp.text = weatherList.main.temp.toString() + getUnit(application.resources.configuration.toString())
+        }
+    }
+
+    private fun getUnit(value: String): String?{
+        var value = "˚C"
+        if("US" == value || "LR" == value || "MM" == value){
+            value = "˚F"
+        }
+        return value
     }
 }
