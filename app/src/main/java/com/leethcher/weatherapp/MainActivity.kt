@@ -34,6 +34,10 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -210,14 +214,28 @@ class MainActivity : AppCompatActivity() {
             binding.tvMainDescription.text = weatherList.weather[i].description
 
             binding.tvTemp.text = weatherList.main.temp.toString() + getUnit(application.resources.configuration.toString())
+            binding.tvHumidity.text = "${weatherList.main.humidity}%"
+            binding.tvMax.text = "${weatherList.main.temp_max} max"
+            binding.tvMin.text = "${weatherList.main.temp_min} min"
+            binding.tvSpeed.text = "${weatherList.wind.speed}"
+            binding.tvName.text = weatherList.name
+            binding.tvSunriseTime.text = unixTime(weatherList.sys.sunrise)
+            binding.tvSunsetTime.text = unixTime(weatherList.sys.sunset)
         }
     }
 
-    private fun getUnit(value: String): String?{
-        var value = "˚C"
+    private fun getUnit(value: String): String{
+        var formula = "˚C"
         if("US" == value || "LR" == value || "MM" == value){
-            value = "˚F"
+            formula = "˚F"
         }
-        return value
+        return formula
+    }
+
+    private fun unixTime(timex: Long): String{
+        val date = Date(timex * 1000L)
+        val sdf = SimpleDateFormat("HH:mm", Locale.KOREA)
+        sdf.timeZone = TimeZone.getDefault()
+        return sdf.format(date)
     }
 }
