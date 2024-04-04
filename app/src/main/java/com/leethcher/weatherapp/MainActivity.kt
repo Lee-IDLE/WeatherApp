@@ -90,6 +90,12 @@ class MainActivity : AppCompatActivity() {
                 }).onSameThread()
                 .check()
         }
+
+        val swipe = binding.swipe
+        swipe.setOnRefreshListener {
+            requestLocationData()
+            swipe.isRefreshing = false
+        }
     }
 
     @SuppressLint("MissingPermission")
